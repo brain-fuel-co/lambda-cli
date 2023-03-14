@@ -20,7 +20,8 @@
     VAR      = #'[a-zA-Z]'
     NUMBER   = #'[0-9]'
     ARITH_OP = '+' | '-' | '*' | '/'
-    LAMBDA   = 'lambda'"))
+    LAMBDA   = 'lambda'"
+   :auto-whitespace :standard))
 
 (defn- evaluate [input]
   (lambda-calculus input))
