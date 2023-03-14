@@ -11,11 +11,16 @@
 
 (def lambda-calculus
   (insta/parser
-   "L_EXP  = VAR
-           | LAMBDA VAR '.' L_EXP
-           | L_EXP L_EXP
-    VAR    = #'[a-zA-Z]'
-    LAMBDA = 'lambda'"))
+   "L_EXP    = VAR_EXP
+             | LAMBDA VAR_EXP '.' L_EXP
+             | L_EXP L_EXP
+    VAR_EXP  = VAR
+             | NUMBER VAR
+             | VAR_EXP ARITH_OP VAR_EXP
+    VAR      = #'[a-zA-Z]'
+    NUMBER   = #'[0-9]'
+    ARITH_OP = '+' | '-' | '*' | '/'
+    LAMBDA   = 'lambda'"))
 
 (defn- evaluate [input]
   (lambda-calculus input))
