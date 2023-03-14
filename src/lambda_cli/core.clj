@@ -14,6 +14,7 @@
   (insta/parser
    "L_EXP    = VAR_EXP
              | LAMBDA VAR_EXP '.' L_EXP
+             | '(' L_EXP ')'
              | L_EXP L_EXP
     VAR_EXP  = VAR
              | NUMBER
