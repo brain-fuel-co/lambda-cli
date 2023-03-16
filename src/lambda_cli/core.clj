@@ -24,7 +24,7 @@
     VAR      = #'[a-zA-Z]'
     NUMBER   = #'[0-9]*'
     ARITH_OP = '+' | '-' | '*' | '/'
-    LAMBDA   = 'lambda' | 'λ' | '\\\\' "
+    LAMBDA   = 'lambda' | 'λ' | '\\\\'"
    :auto-whitespace :standard))
 
 (defn- evaluate [input]
