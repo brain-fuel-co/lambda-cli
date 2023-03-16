@@ -16,6 +16,7 @@
              | LAMBDA VAR_EXP '.' L_EXP
              | '(' L_EXP ')'
              | L_EXP L_EXP
+             | '\\\\' VAR_EXP '->' L_EXP
     VAR_EXP  = VAR
              | NUMBER
              | NUMBER VAR
@@ -23,7 +24,7 @@
     VAR      = #'[a-zA-Z]'
     NUMBER   = #'[0-9]*'
     ARITH_OP = '+' | '-' | '*' | '/'
-    LAMBDA   = 'lambda'"
+    LAMBDA   = 'lambda' | 'λ' | '\\\\' "
    :auto-whitespace :standard))
 
 (defn- evaluate [input]
