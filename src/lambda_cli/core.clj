@@ -31,7 +31,7 @@
   (lambda-calculus input))
 
 (defn -main
-  "This will eventuall be a Lambda-Calculus REPL"
+  "This will eventually be a Lambda-Calculus REPL"
   [& args]
   (while true
     (let [input (read-input)]
