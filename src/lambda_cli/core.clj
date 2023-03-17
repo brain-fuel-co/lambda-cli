@@ -16,7 +16,7 @@
   (insta/parser
    "L_EXP    = VAR_EXP
              | LAMBDA VAR '.' L_EXP
-             | <'('> L_EXP <')'> <'('> L_EXP <')'>
+             | <'('> L_EXP L_EXP <')'>
     VAR_EXP  = VAR
              | NUMBER
              | NUMBER VAR
@@ -30,6 +30,8 @@
     DIV      = <'/'>
     LAMBDA   = 'lambda'"
    :auto-whitespace :standard))
+
+;;(defn- evaluate-var-exps)
 
 (defn- evaluate [input]
   (->> (lambda-calculus input)))
