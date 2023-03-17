@@ -31,17 +31,8 @@
     LAMBDA   = 'lambda'"
    :auto-whitespace :standard))
 
-(defn- eliminate-nil-fields [input]
-   (->> input))
-    
-
-
- 
-
-
 (defn- evaluate [input]
-  (->> (lambda-calculus input)
-       eliminate-nil-fields))
+  (->> (lambda-calculus input)))
 
 (defn -main
   "This will eventuall be a Lambda-Calculus REPL"
