@@ -1,6 +1,8 @@
 (ns lambda-cli.core
-  (:require [instaparse.core :as insta]
-            [clojure.pprint :as pp])
+  (:require [clojure.pprint :as pp]
+            [net.cgrand.enlive-html :as enlive]
+            [instaparse.core :as insta])
+
   (:gen-class))
 
 (insta/set-default-output-format! :enlive)
@@ -29,12 +31,14 @@
     DIV      = <'/'>
     LAMBDA   = 'lambda' | 'λ' | '\\\\'"
    :auto-whitespace :standard))
+   
+;;(defn- evaluate-var-exps)
 
 (defn- evaluate [input]
-  (lambda-calculus input))
+  (->> (lambda-calculus input)))
 
 (defn -main
-  "This will eventually be a Lambda-Calculus REPL"
+  "This will eventuall be a Lambda-Calculus REPL"
   [& args]
   (while true
     (let [input (read-input)]
