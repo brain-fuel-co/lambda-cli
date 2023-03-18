@@ -15,9 +15,9 @@
 (def lambda-calculus
   (insta/parser
    "L_EXP    = VAR_EXP
-             | LAMBDA VAR '.' L_EXP
+             | LAMBDA VAR_EXP BIND L_EXP
              | <'('> L_EXP L_EXP <')'>
-             | LAMBDA VAR_EXP '->' L_EXP
+    BIND     = '.' | '->'
     VAR_EXP  = VAR
              | NUMBER
              | NUMBER VAR
@@ -31,7 +31,7 @@
     DIV      = <'/'>
     LAMBDA   = 'lambda' | 'λ' | '\\\\'"
    :auto-whitespace :standard))
-   
+
 ;;(defn- evaluate-var-exps)
 
 (defn- evaluate [input]
