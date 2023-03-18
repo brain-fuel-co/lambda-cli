@@ -13,17 +13,20 @@
 (def lambda-calculus
   (insta/parser
    "L_EXP    = VAR_EXP
-             | LAMBDA VAR_EXP '.' L_EXP
-             | '(' L_EXP ')'
-             | L_EXP L_EXP
-             | '\\\\' VAR_EXP '->' L_EXP
+             | LAMBDA VAR '.' L_EXP
+             | <'('> L_EXP L_EXP <')'>
+             | LAMBDA VAR_EXP '->' L_EXP
     VAR_EXP  = VAR
              | NUMBER
              | NUMBER VAR
              | VAR_EXP ARITH_OP VAR_EXP
-    VAR      = #'[a-zA-Z]'
-    NUMBER   = #'[0-9]*'
-    ARITH_OP = '+' | '-' | '*' | '/'
+    VAR      = #'[a-z]' | #'[A-Z]+'
+    NUMBER   = #'[0-9]+'
+    ARITH_OP = ADD | SUB | MUL | DIV
+    ADD      = <'+'>
+    SUB      = <'-'>
+    MUL      = <'*'>
+    DIV      = <'/'>
     LAMBDA   = 'lambda' | 'λ' | '\\\\'"
    :auto-whitespace :standard))
 
