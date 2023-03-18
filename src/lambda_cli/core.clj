@@ -15,8 +15,11 @@
 (def lambda-calculus
   (insta/parser
    "L_EXP    = VAR_EXP
-             | LAMBDA VAR_EXP BIND L_EXP
-             | <'('> L_EXP L_EXP <')'>
+             | APPLY
+             | ABSTRACT
+             | <'('> L_EXP <')'>
+    APPLY    = <'('> L_EXP <')'> L_EXP
+    ABSTRACT = LAMBDA VAR_EXP BIND L_EXP
     BIND     = '.' | '->'
     VAR_EXP  = VAR
              | NUMBER
