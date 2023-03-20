@@ -14,25 +14,25 @@
 
 (def lambda-calculus
   (insta/parser
-   "L_EXP    = VAR_EXP
-             | APPLY
-             | ABSTRACT
-             | <'('> L_EXP <')'>
-    APPLY    = <'('> L_EXP <')'> L_EXP
-    ABSTRACT = LAMBDA VAR_EXP BIND L_EXP
-    BIND     = '.' | '->'
-    VAR_EXP  = VAR
-             | NUMBER
-             | NUMBER VAR
-             | VAR_EXP ARITH_OP VAR_EXP
-    VAR      = #'[a-z]' | #'[A-Z]+'
-    NUMBER   = #'[0-9]+'
-    ARITH_OP = ADD | SUB | MUL | DIV
-    ADD      = <'+'>
-    SUB      = <'-'>
-    MUL      = <'*'>
-    DIV      = <'/'>
-    LAMBDA   = 'lambda' | 'λ' | '\\\\'"
+   "L_EXP      = VAR_EXP
+               | APPLY
+               | ABSTRACT
+    APPLY      = <'('> L_EXP <WHITESPACE> L_EXP <')'>
+    ABSTRACT   = LAMBDA VAR BIND L_EXP
+    BIND       = '.' | '->'
+    WHITESPACE = #'\\s+'
+    VAR_EXP    = VAR
+               | NUMBER
+               | NUMBER VAR
+               | VAR_EXP ARITH_OP VAR_EXP
+    VAR        = #'[a-z]' | #'[A-Z]+'
+    NUMBER     = #'[0-9]+'
+    ARITH_OP   = ADD | SUB | MUL | DIV
+    ADD        = <'+'>
+    SUB        = <'-'>
+    MUL        = <'*'>
+    DIV        = <'/'>
+    LAMBDA     = 'lambda' | 'λ' | '\\\\'"
    :auto-whitespace :standard))
 
 ;;(defn- evaluate-var-exps)
