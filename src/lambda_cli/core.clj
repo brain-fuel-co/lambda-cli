@@ -14,21 +14,25 @@
 
 (def lambda-calculus
   (insta/parser
-   "L_EXP    = VAR_EXP
-             | LAMBDA VAR '.' L_EXP
-             | <'('> L_EXP L_EXP <')'>
-    VAR_EXP  = VAR
-             | NUMBER
-             | NUMBER VAR
-             | VAR_EXP ARITH_OP VAR_EXP
-    VAR      = #'[a-z]' | #'[A-Z]+'
-    NUMBER   = #'[0-9]+'
-    ARITH_OP = ADD | SUB | MUL | DIV
-    ADD      = <'+'>
-    SUB      = <'-'>
-    MUL      = <'*'>
-    DIV      = <'/'>
-    LAMBDA   = 'lambda'"
+   "L_EXP      = VAR_EXP
+               | APPLY
+               | ABSTRACT
+    APPLY      = <'('> L_EXP <WHITESPACE> L_EXP <')'>
+    ABSTRACT   = LAMBDA VAR BIND L_EXP
+    BIND       = '.' | '->'
+    WHITESPACE = #'\\s+'
+    VAR_EXP    = VAR
+               | NUMBER
+               | NUMBER VAR
+               | VAR_EXP ARITH_OP VAR_EXP
+    VAR        = #'[a-z]' | #'[A-Z]+'
+    NUMBER     = #'[0-9]+'
+    ARITH_OP   = ADD | SUB | MUL | DIV
+    ADD        = <'+'>
+    SUB        = <'-'>
+    MUL        = <'*'>
+    DIV        = <'/'>
+    LAMBDA     = 'lambda' | 'λ' | '\\\\'"
    :auto-whitespace :standard))
 
 ;;(defn- evaluate-var-exps)
@@ -37,7 +41,7 @@
   (->> (lambda-calculus input)))
 
 (defn -main
-  "This will eventuall be a Lambda-Calculus REPL"
+  "This will eventually be a Lambda-Calculus REPL"
   [& args]
   (while true
     (let [input (read-input)]
