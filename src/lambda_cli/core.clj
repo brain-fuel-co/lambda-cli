@@ -17,7 +17,7 @@
    "L_EXP      = VAR_EXP
                | APPLY
                | ABSTRACT
-    APPLY      = <'('> L_EXP <WHITESPACE> L_EXP <')'>
+    APPLY      = <'('> L_EXP L_EXP <')'>
     ABSTRACT   = LAMBDA VAR BIND L_EXP
     BIND       = '.' | '->'
     WHITESPACE = #'\\s+'
