@@ -1,6 +1,8 @@
 (ns lambda-cli.core
-  (:require [instaparse.core :as insta]
-            [clojure.pprint :as pp])
+  (:require [clojure.pprint :as pp]
+            [net.cgrand.enlive-html :as enlive]
+            [instaparse.core :as insta])
+
   (:gen-class))
 
 (insta/set-default-output-format! :enlive)
@@ -12,25 +14,58 @@
 
 (def lambda-calculus
   (insta/parser
-   "L_EXP    = VAR_EXP
-             | LAMBDA VAR_EXP '.' L_EXP
-             | '(' L_EXP ')'
-             | L_EXP L_EXP
-    VAR_EXP  = VAR
-             | NUMBER
-             | NUMBER VAR
-             | VAR_EXP ARITH_OP VAR_EXP
-    VAR      = #'[a-zA-Z]'
-    NUMBER   = #'[0-9]*'
-    ARITH_OP = '+' | '-' | '*' | '/'
-    LAMBDA   = 'lambda'"
+   "L_EXP      = VAR_EXP
+               | APPLY
+               | ABSTRACT
+    APPLY      = <'('> L_EXP <WHITESPACE> L_EXP <')'>
+    ABSTRACT   = LAMBDA VAR BIND L_EXP
+    BIND       = '.' | '->'
+    WHITESPACE = #'\\s+'
+    VAR_EXP    = VAR
+               | NUMBER
+               | NUMBER VAR
+               | VAR_EXP ARITH_OP VAR_EXP
+    VAR        = #'[a-z]' | #'[A-Z]+'
+    NUMBER     = #'[0-9]+'
+    ARITH_OP   = ADD | SUB | MUL | DIV
+    ADD        = <'+'>
+    SUB        = <'-'>
+    MUL        = <'*'>
+    DIV        = <'/'>
+    LAMBDA     = 'lambda' | 'λ' | '\\\\'"
    :auto-whitespace :standard))
 
+;;(defn- evaluate-var-exps)
+(defn not-arith-op [tag]
+  (case tag
+    (:ADD :SUB :MUL :DIV) false
+    true))
+
+(defn mk-application
+  [coll]
+  (str "(" (apply str (interpose " " coll)) ")"))
+
+(defn reconstruct [m]
+  (let [tag (:tag m) exps (:content m)]
+  (cond
+    (and (not-arith-op tag) (nil? exps)) m
+    (= tag :APPLY)        (mk-application
+                           (map reconstruct exps))
+    (or (= tag :ABSTRACT)
+        (= tag :VAR_EXP)) (apply str (map reconstruct exps))
+
+    (= tag :ADD)          "+"
+    (= tag :SUB)          "-"
+    (= tag :MUL)          "*"
+    (= tag :DIV)          "/"
+
+    :else                 (reconstruct (first exps)))))
+
 (defn- evaluate [input]
-  (lambda-calculus input))
+  (->> (lambda-calculus input)))
 
 (defn -main
-  "This will eventuall be a Lambda-Calculus REPL"
+  "This will eventually be a Lambda-Calculus REPL"
   [& args]
   (while true
     (let [input (read-input)]
