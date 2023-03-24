@@ -20,7 +20,6 @@
     APPLY      = <'('> L_EXP L_EXP <')'>
     ABSTRACT   = LAMBDA VAR BIND L_EXP
     BIND       = '.' | '->'
-    WHITESPACE = #'\\s+'
     VAR_EXP    = VAR
                | NUMBER
                | NUMBER VAR
