@@ -18,7 +18,7 @@
                | APPLY
                | ABSTRACT
     APPLY      = <'('> L_EXP L_EXP <')'>
-    ABSTRACT   = LAMBDA VAR BIND L_EXP
+    ABSTRACT   = <LAMBDA> VAR <BIND> L_EXP
     BIND       = '.' | '->'
     VAR_EXP    = VAR
                | NUMBER
@@ -53,6 +53,9 @@
     (or (= tag :ABSTRACT)
         (= tag :VAR_EXP)) (apply str (map reconstruct exps))
 
+    (= tag :LAMBDA)        "λ"
+    (= tag :BIND)          "."
+    
     (= tag :ADD)          "+"
     (= tag :SUB)          "-"
     (= tag :MUL)          "*"
