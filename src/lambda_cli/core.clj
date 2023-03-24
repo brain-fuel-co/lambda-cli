@@ -53,8 +53,8 @@
     (or (= tag :ABSTRACT)
         (= tag :VAR_EXP)) (apply str (map reconstruct exps))
 
-    (= tag :LAMBDA)        "λ"
-    (= tag :BIND)          "."
+    (= tag :LAMBDA)       "λ"
+    (= tag :BIND)         "."
     
     (= tag :ADD)          "+"
     (= tag :SUB)          "-"
