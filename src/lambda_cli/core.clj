@@ -81,24 +81,22 @@
      :L_EXP (reconstruct (nth (:content lambda) 3))}
     (deconstruct-lambda (first (:content lambda)))))
 
-(defn β-reduce [exp]
+(defn app-to-abstraction? [application]
+  (let [exp (first (:content application))]
+    (if (= (:tag (first (:content exp))) :ABSTRACT) true false)))
+
+(defn can-sub? [exp]
+    (let [c (first (:content exp)) tag (:tag c)]
+      (if (= tag :APPLY)
+        (if (app-to-abstraction? c) true false) false)))
+
+(defn sub [exp]
   (let [bifurcation (bifurcate exp) to-update (deconstruct-lambda (evaluate (first bifurcation))) replacement (second bifurcation)]
     (clojure.string/replace
      (:L_EXP to-update) (:BINDING_VAR to-update) replacement)))
 
-(defn app-to-abstraction? [application]
-  (let [exp (first (:content application))]
-    (if (= (:tag exp) :ABSTRACT) true false)))
-
-(defn can-sub? [exp]
-    (let [c (first (:content exp)) tag (:tag exp)]
-      (if (= tag :APPLY)
-        (if (app-to-abstraction? c) true false) false)))
-
-(defn get-abstraction-contents [application]
-  (let [abstraction (first (:content application))]
-    [(reconstruct (second (:content abstraction))) (reconstruct (last (:content abstraction)))])
-  )
+(defn β-reduce [exp]
+  (if (can-sub? exp) (sub exp) (reconstruct exp)))
 
 (defn- evaluate [input]
   (->> (lambda-calculus input)))
