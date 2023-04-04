@@ -2,7 +2,6 @@
   (:require [clojure.pprint :as pp]
             [net.cgrand.enlive-html :as enlive]
             [instaparse.core :as insta])
-
   (:gen-class))
 
 (insta/set-default-output-format! :enlive)
@@ -20,7 +19,6 @@
     APPLY      = <'('> L_EXP L_EXP <')'>
     ABSTRACT   = LAMBDA VAR BIND L_EXP
     BIND       = '.' | '->'
-    WHITESPACE = #'\\s+'
     VAR_EXP    = VAR
                | NUMBER
                | NUMBER VAR
@@ -45,14 +43,25 @@
   [coll]
   (str "(" (apply str (interpose " " coll)) ")"))
 
+(defn mk-reduction
+  [coll]
+  (str "[" (apply str (interpose ":=" coll)) "]"))
+
 (defn reconstruct [m]
   (let [tag (:tag m) exps (:content m)]
   (cond
     (and (not-arith-op tag) (nil? exps)) m
+
     (= tag :APPLY)        (mk-application
                            (map reconstruct exps))
     (or (= tag :ABSTRACT)
         (= tag :VAR_EXP)) (apply str (map reconstruct exps))
+
+;;    (= tag :REDUCE)       (str (reconstruct (first exps))
+;;                               (mk-reduction (map reconstruct (rest exps))))
+
+    (= tag :LAMBDA)       "λ"
+    (= tag :BIND)         "."
 
     (= tag :ADD)          "+"
     (= tag :SUB)          "-"
@@ -60,6 +69,36 @@
     (= tag :DIV)          "/"
 
     :else                 (reconstruct (first exps)))))
+
+(defn bifurcate [application]
+  (if (= :APPLY (:tag application))
+    (map reconstruct (:content application))
+    (bifurcate (first (:content application)))))
+
+(defn deconstruct-lambda [lambda]
+  (if (= (:tag lambda) :ABSTRACT)
+    {:BINDING_VAR (reconstruct (second (:content lambda)))
+     :L_EXP (reconstruct (nth (:content lambda) 3))}
+    (deconstruct-lambda (first (:content lambda)))))
+
+(defn β-reduce [exp]
+  (let [bifurcation (bifurcate exp) to-update (deconstruct-lambda (evaluate (first bifurcation))) replacement (second bifurcation)]
+    (clojure.string/replace
+     (:L_EXP to-update) (:BINDING_VAR to-update) replacement)))
+
+(defn app-to-abstraction? [application]
+  (let [exp (first (:content application))]
+    (if (= (:tag exp) :ABSTRACT) true false)))
+
+(defn can-sub? [exp]
+    (let [c (first (:content exp)) tag (:tag exp)]
+      (if (= tag :APPLY)
+        (if (app-to-abstraction? c) true false) false)))
+
+(defn get-abstraction-contents [application]
+  (let [abstraction (first (:content application))]
+    [(reconstruct (second (:content abstraction))) (reconstruct (last (:content abstraction)))])
+  )
 
 (defn- evaluate [input]
   (->> (lambda-calculus input)))
